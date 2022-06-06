@@ -6,16 +6,18 @@ import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ThemeProvider attribute="class">
-      <div className="dark:bg-nft-dark bg-white min-h-screen">
+    <ThemeProvider attribute='class'>
+      <div className='dark:bg-nft-dark bg-white min-h-screen'>
         <Navbar />
-        <Component {...pageProps} />
+        <div className='pt-65'>
+          <Component {...pageProps} />
+        </div>
         <Footer />
       </div>
 
       <Script
-        src="https://kit.fontawesome.com/27ba7154b1.js"
-        crossorigin="anonymous"
+        src='https://kit.fontawesome.com/27ba7154b1.js'
+        crossorigin='anonymous'
       />
     </ThemeProvider>
   );
