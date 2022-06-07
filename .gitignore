@@ -26,3 +26,12 @@ artifacts
 
 #vscode
 .vscode
+node_modules
+.env
+coverage
+coverage.json
+typechain
+
+#Hardhat files
+cache
+artifacts
