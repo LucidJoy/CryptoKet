@@ -19,7 +19,8 @@ const Home = () => {
     fetchNFTs().then((items) => {
       setNfts(items);
 
-      console.log(items);
+      //FIXME
+      console.log(nfts);
     });
   }, []);
 
