@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { shortenAddress } from "../utils/shortenAddress";
 import { NFTContext } from "../context/NFTContext";
 import images from "../assets";
 
@@ -29,7 +30,9 @@ const NFTCard = ({ nft }) => {
               {nft.price} <span className='font-normal'>{NFTCurrency}</span>
             </p>
             <p className='font-poppins dark:text-white text-nft-black-1 font-semibold text-xs minlg:text-lg'>
-              {nft.seller}
+              {nft.seller.length
+                ? 10 && shortenAddress(nft.seller)
+                : nft.seller}
             </p>
           </div>
         </div>

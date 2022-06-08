@@ -4,22 +4,25 @@ import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 
+import { NFTContext } from "../context/NFTContext";
 import { Button, Input } from "../components";
 import images from "../assets";
 
 const CreateNFT = () => {
   const { theme } = useTheme();
+  const router = useRouter();
   const [fileUrl, setFileUrl] = useState(null);
   const [formInput, setFormInput] = useState({
     price: "",
     name: "",
     description: "",
   });
+  const { uploadToIPFS, createNFT } = useContext(NFTContext);
 
-  console.log(formInput);
-
-  const onDrop = useCallback(() => {
+  const onDrop = useCallback(async (acceptedFile) => {
     //upload image to ipfs
+    const url = await uploadToIPFS(acceptedFile[0]);
+    setFileUrl(url);
   }, []);
 
   const {
@@ -61,37 +64,41 @@ const CreateNFT = () => {
             <div {...getRootProps()} className={fileStyle}>
               <input {...getInputProps()} />
               <div className='flexCenter flex-col text-center'>
-                <p className='font-poppins dark:text-white text-nft-black-1 font-semibold text-lg'>
-                  JPG, PNG, GIF, SVG, WEBM. Max 100mb.
-                </p>
+                {fileUrl ? (
+                  <div className='rounded-md my-2'>
+                    <img
+                      src={fileUrl}
+                      alt='asset_file'
+                      className='rounded-md'
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <p className='font-poppins dark:text-white text-nft-black-1 font-semibold text-lg'>
+                      JPG, PNG, GIF, SVG, WEBM. Max 100mb.
+                    </p>
 
-                <div className='my-12 w-full flex justify-center'>
-                  <Image
-                    src={images.upload}
-                    width={100}
-                    height={100}
-                    objectFit='contain'
-                    alt='file_upload'
-                    className={theme === "light" && "filter invert"}
-                  />
-                </div>
+                    <div className='my-12 w-full flex justify-center'>
+                      <Image
+                        src={images.upload}
+                        width={100}
+                        height={100}
+                        objectFit='contain'
+                        alt='file_upload'
+                        className={theme === "light" && "filter invert"}
+                      />
+                    </div>
 
-                <p className='font-poppins dark:text-white text-nft-black-1 font-semibold text-sm'>
-                  Drag and Drop File
-                </p>
-                <p className='font-poppins dark:text-white text-nft-black-1 font-semibold text-sm mt-2'>
-                  or browse media on your device
-                </p>
+                    <p className='font-poppins dark:text-white text-nft-black-1 font-semibold text-sm'>
+                      Drag and Drop File
+                    </p>
+                    <p className='font-poppins dark:text-white text-nft-black-1 font-semibold text-sm mt-2'>
+                      or browse media on your device
+                    </p>
+                  </>
+                )}
               </div>
             </div>
-
-            {fileUrl && (
-              <aside>
-                <div>
-                  <img src={fileUrl} alt='asset_file' />
-                </div>
-              </aside>
-            )}
           </div>
         </div>
 
@@ -124,7 +131,7 @@ const CreateNFT = () => {
           <Button
             btnName='Create NFT'
             classStyles='rounded-xl py-3'
-            handleClick={() => {}}
+            handleClick={() => createNFT(formInput, fileUrl, router)}
           />
         </div>
       </div>
