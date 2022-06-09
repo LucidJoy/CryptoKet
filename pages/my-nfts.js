@@ -79,11 +79,11 @@ const MyNFTs = () => {
         />
 
         <div className='flexCenter flex-col -mt-20 z-0'>
-          <div className='flexCenter w-40 h-40 sm:w-36 sm:h-36 p-1 bg-nft-black-4 rounded-full'>
+          <div className='flexCenter w-40 h-40 sm:w-36 sm:h-36 p-1 bg-white dark:bg-nft-black-4 rounded-full'>
             <Image
               className='rounded-full object-cover'
               objectFit='cover'
-              src={images.creator1}
+              src={images.creator2}
             />
           </div>
           <p className='font-poppins dark:text-white text-nft-black-1 font-semibold text-xl mt-6'>

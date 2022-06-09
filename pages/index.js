@@ -165,7 +165,7 @@ const Home = () => {
                           layout='fill'
                           objectFit='contain'
                           alt='left_arrow'
-                          className={theme === "light" && "filter invert"}
+                          className={theme === "light" ? "filter invert" : ""}
                         />
                       </div>
                       <div
@@ -177,7 +177,7 @@ const Home = () => {
                           layout='fill'
                           objectFit='contain'
                           alt='right_arrow'
-                          className={theme === "light" && "filter invert"}
+                          className={theme === "light" ? "filter invert" : ""}
                         />
                       </div>
                     </>
