@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useTheme } from "next-themes";
 
 import { NFTContext } from "../context/NFTContext";
-import { Banner, CreatorCard, NFTCard } from "../components";
+import { Banner, CreatorCard, NFTCard, SearchBar } from "../components";
 import { makeId } from "../utils/makeId";
 import images from "../assets";
 import { getCreators } from "../utils/getTopCreators";
@@ -15,16 +15,59 @@ const Home = () => {
   const scrollRef = useRef(null);
   const [hideButton, setHideButton] = useState(false);
   const [nfts, setNfts] = useState([]);
+  const [nftsCopy, setNftsCopy] = useState([]);
   const { fetchNFTs } = useContext(NFTContext);
+  const [activeSelect, setActiveSelect] = useState("Recently Added");
 
   useEffect(() => {
     fetchNFTs().then((items) => {
       setNfts(items);
+      setNftsCopy(items);
 
       //FIXME
       console.log(items);
     });
   }, []);
+
+  useEffect(() => {
+    const sortedNfts = [...nfts];
+
+    switch (activeSelect) {
+      case "Recently Added":
+        setNfts(sortedNfts.sort((a, b) => b.tokenId - a.tokenId));
+        break;
+      case "Price (Low to High)":
+        setNfts(sortedNfts.sort((a, b) => a.price - b.price));
+        break;
+      case "Price (High to Low)":
+        setNfts(sortedNfts.sort((a, b) => b.price - a.price));
+        break;
+
+      default:
+        setNfts(nfts);
+        break;
+    }
+  }, [activeSelect]);
+
+  const onHandleSearch = (value) => {
+    const filteredNfts = nfts.filter(({ name }) =>
+      name.toLowerCase().includes(value.toLowerCase())
+    );
+
+    if (filteredNfts.length) {
+      setNfts(filteredNfts);
+    } else {
+      //re show all nfts
+      setNfts(nftsCopy);
+    }
+  };
+
+  //show all nfts if searchbar is empty
+  const onClearSearch = () => {
+    if (nfts.length && nftsCopy.length) {
+      setNfts(nftsCopy);
+    }
+  };
 
   const handleScroll = (direction) => {
     const { current } = scrollRef;
@@ -58,7 +101,7 @@ const Home = () => {
     };
   }, []);
 
-  const topCreators = getCreators(nfts);
+  const topCreators = getCreators(nftsCopy);
 
   return (
     <div className='flex justify-center sm:px-4 p-12'>
@@ -134,7 +177,14 @@ const Home = () => {
             <h1 className='font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold sm:mb-4 flex-1'>
               Hot Bids
             </h1>
-            <div>Searchbar</div>
+            <div className='flex flex-row flex-2 sm:w-full sm:flex-col'>
+              <SearchBar
+                activeSelect={activeSelect}
+                setActiveSelect={setActiveSelect}
+                handleSearch={onHandleSearch}
+                clearSearch={onClearSearch}
+              />
+            </div>
           </div>
           <div className='mt-3 w-full flex flex-wrap justify-start md:justify-center'>
             {nfts.map((nft) => (
